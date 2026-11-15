@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exam Scheduler</title><link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header><div><h1>Examination Scheduler</h1><p>Plan examination slots, room allocations and invigilation.</p></div></header>
+<main>
+<section class="panel">
+ <div class="section-head"><div><span class="step">01</span><h2>Import initial data</h2><p>Select the JSON file containing students, faculty, rooms, subjects and enrollments.</p></div><button class="btn secondary" id="sampleBtn">Load sample JSON</button></div>
+ <div class="file-picker"><label for="jsonFile" class="file-label" id="dropZone"><span class="file-icon">↑</span><span><strong>Choose a JSON file</strong><small id="fileName">or drag and drop it here</small></span><span class="file-browse">Browse files</span></label><input type="file" id="jsonFile" accept=".json,application/json"></div>
+ <div class="actions"><span id="importStatus" class="status">No data imported yet</span><button class="btn primary" id="importBtn">Import data</button></div>
+</section>
+<section class="stats">
+ <div class="stat"><span>Students</span><strong id="studentsCount">—</strong></div><div class="stat"><span>Faculty</span><strong id="facultyCount">—</strong></div><div class="stat"><span>Rooms</span><strong id="roomsCount">—</strong></div><div class="stat"><span>Subjects</span><strong id="subjectsCount">—</strong></div><div class="stat"><span>Enrollments</span><strong id="enrollmentsCount">—</strong></div>
+</section>
+<section class="panel">
+ <div class="section-head"><div><span class="step">02</span><h2>Generate optimized schedule</h2><p>CP-SAT minimizes time slots while respecting conflicts, room capacity and invigilator availability.</p></div><div class="solver-actions"><button class="btn danger" id="stopBtn" type="button" hidden>Stop optimization</button><button class="btn primary" id="generateBtn" type="button">Generate schedule →</button></div></div>
+ <div class="solver-settings">
+  <label>Solver workers<input type="number" id="workers" min="1" max="64" value="8"></label>
+ </div>
+ <div class="optimization-metrics">
+  <div><span>Elapsed time</span><strong id="elapsedTimer">00:00:00</strong></div>
+  <div><span>Best schedule</span><strong id="bestSlots">—</strong></div>
+  <div><span>Current best found at</span><strong id="bestFoundAt">—</strong></div>
+ </div>
+ <div id="generationStatus" class="notice">Import data before generating a schedule.</div>
+ <div class="history-panel">
+  <div class="history-heading"><strong>Best-schedule history</strong><span>Each row records a new improvement.</span></div>
+  <div id="historyChart" class="history-chart"></div>
+  <div id="historyView" class="history-empty">No feasible schedule found yet.</div>
+ </div>
+</section>
+<section class="panel">
+ <div class="section-head"><div><span class="step">03</span><h2>Examination schedule</h2><p>Filter by slot, room, subject, student or invigilator.</p></div><button class="btn secondary" id="csvBtn" disabled>Export CSV ↓</button></div>
+ <div class="filters">
+  <label>Time slot<select id="slotFilter"><option value="">All slots</option></select></label>
+  <label>Room<select id="roomFilter"><option value="">All rooms</option></select></label>
+  <label>Subject<select id="subjectFilter"><option value="">All subjects</option></select></label>
+  <label>Student roll no.<input id="studentFilter" placeholder="Search student"></label>
+  <label>Faculty<select id="facultyFilter"><option value="">All faculty</option></select></label>
+ </div>
+ <div id="scheduleSummary" class="schedule-summary">No schedule generated.</div>
+ <div id="scheduleView" class="schedule-view"><div class="empty"><strong>Your schedule will appear here</strong><span>Import data and generate a schedule.</span></div></div>
+</section>
+</main>
+<footer>Exam Scheduler · Flask · SQLite · OR-Tools CP-SAT</footer>
+<script src="/static/app.js"></script>
+</body></html>
